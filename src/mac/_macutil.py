@@ -172,7 +172,7 @@ class BBCocoaSleeper(NSObject):
         self.timedout = False
         return self
         
-    def sleep(self, timeout):
+    def sleep_(self, timeout):
         NSTimer.scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(
                 timeout, self, "timedOut:", None, False)
         self.timedout = False 
@@ -185,7 +185,7 @@ class BBCocoaSleeper(NSObject):
     
 def waitfor(timeout):
     sleeper = BBCocoaSleeper.alloc().init()
-    sleeper.sleep(timeout)
+    sleeper.sleep_(timeout)
 
 
 class BBFileLikeObjectReader(NSObject):

@@ -664,7 +664,7 @@ class _BluetoothSocket(object):
             listener = _ChannelEventListener.alloc().initWithDelegate_(self)
             if self.__conn.channel is not None:
                 self.__conn.channel.setDelegate_(listener.delegate())
-                listener.registerclosenotif(self.__conn.channel)
+                listener.registerclosenotif_(self.__conn.channel)
             return listener
         
     # should not call this if connect() has been called to connect this socket
@@ -724,7 +724,7 @@ class _RFCOMMConnection(object):
             result, self.channel = device.openRFCOMMChannelSync_withChannelID_delegate_(port, listener.delegate())        
         if result == _macutil.kIOReturnSuccess:
             self.channel.setDelegate_(listener.delegate())
-            listener.registerclosenotif(self.channel)
+            listener.registerclosenotif_(self.channel)
         else:
             self.channel = None
         return result
@@ -759,7 +759,7 @@ class _L2CAPConnection(object):
             result, self.channel = device.openL2CAPChannelSync_withPSM_delegate_(port, listener.delegate())            
         if result == _macutil.kIOReturnSuccess:
             self.channel.setDelegate_(listener.delegate())
-            listener.registerclosenotif(self.channel)
+            listener.registerclosenotif_(self.channel)
         else:
             self.channel = None
         return result
@@ -818,7 +818,7 @@ class _ChannelEventListener(Foundation.NSObject):
     def delegate(self):
         return self.__channelDelegate
     
-    def registerclosenotif(self, channel):
+    def registerclosenotif_(self, channel):
         # oddly enough, sometimes the channelClosed: selector doesn't get called
         # (maybe if there's a lot of data being passed?) but this seems to work
         notif = channel.registerForChannelCloseNotification_selector_(self, 

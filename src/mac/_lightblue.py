@@ -81,7 +81,7 @@ def findservices(addr=None, name=None, servicetype=None):
                 # In future should have option to not do updates.
                 serviceupdater = _SDPQueryRunner.alloc().init()
                 try:
-                    serviceupdater.query(iobtdevice)  # blocks until updated
+                    serviceupdater.query_(iobtdevice)  # blocks until updated
                 except _lightbluecommon.BluetoothError, e:
                     msg = "findservices() couldn't get services for %s: %s" % \
                         (iobtdevice.getNameOrAddress(), str(e))
@@ -299,11 +299,11 @@ class _SDPQueryRunner(Foundation.NSObject):
     on an IOBluetoothDevice.
     """
 
-    def query(self, device, timeout=10.0):
+    def query_(self, device, timeout=10.0):
         # do SDP query
         err = device.performSDPQuery_(self)
         if err != _macutil.kIOReturnSuccess:
-            raise _lightbluecommon.BluetoothError(err, self._errmsg(device))
+            raise _lightbluecommon.BluetoothError(err, self._errmsg_(device))
         
         # performSDPQuery_ is async, so block-wait
         self._queryresult = None
@@ -315,7 +315,7 @@ class _SDPQueryRunner(Foundation.NSObject):
         # query is now complete
         if self._queryresult != _macutil.kIOReturnSuccess:  
             raise _lightbluecommon.BluetoothError(
-                self._queryresult, self._errmsg(device))
+                self._queryresult, self._errmsg_(device))
         
     def sdpQueryComplete_status_(self, device, status):
         # can't raise exception during a callback, so just keep the err value
@@ -324,7 +324,7 @@ class _SDPQueryRunner(Foundation.NSObject):
     sdpQueryComplete_status_ = objc.selector(
         sdpQueryComplete_status_, signature="v@:@i")    # accept object, int
             
-    def _errmsg(self, device):
+    def _errmsg_(self, device):
         return "Error getting services for %s" % device.getNameOrAddress()
             
             
@@ -417,18 +417,18 @@ class _AsyncDeviceInquiry(Foundation.NSObject):
         return self
     
     # length property
-    def _setlength(self, length):
+    def _setlength_(self, length):
         self._inquiry.setInquiryLength_(length)
     length = property(
             lambda self: self._inquiry.inquiryLength(),
-            _setlength)
+            _setlength_)
             
     # updatenames property
-    def _setupdatenames(self, update):
+    def _setupdatenames_(self, update):
         self._inquiry.setUpdateNewDeviceNames_(update)
     updatenames = property(
             lambda self: self._inquiry.updateNewDeviceNames(),
-            _setupdatenames)
+            _setupdatenames_)
 
     # returns error code
     def start(self):
