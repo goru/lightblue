@@ -46,7 +46,7 @@ try:
                 "/System/Library/Frameworks/IOBluetooth.framework"),
             globals=globals())
 
-except AttributeError:
+except (AttributeError, ValueError):
     # earlier versions use loadBundle() and setSignatureForSelector()
     
     objc.loadBundle("IOBluetooth", globals(), 
