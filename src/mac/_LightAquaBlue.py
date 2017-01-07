@@ -26,7 +26,10 @@ classes through PyObjC.
 import objc
 import os.path
 
-_FRAMEWORK_PATH = u'/Library/Frameworks/LightAquaBlue.framework'
+_FRAMEWORK_PATH = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)),
+    u'LightAquaBlue/LightAquaBlue.framework')
+
 if not os.path.isdir(_FRAMEWORK_PATH):
     raise ImportError("Cannot load LightAquaBlue framework, not found at" + \
         _FRAMEWORK_PATH)
