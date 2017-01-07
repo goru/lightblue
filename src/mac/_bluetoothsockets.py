@@ -347,8 +347,8 @@ class _BluetoothSocket(object):
         _checkaddrpair(address)
         
         # open a connection to device
-        self.__remotedevice = _IOBluetooth.IOBluetoothDevice.withAddress_(
-                _macutil.createbtdevaddr(address[0]))
+        self.__remotedevice = _IOBluetooth.IOBluetoothDevice.withAddressString_(
+                address[0])
         if not self.__remotedevice.isConnected():
             if self.__timeout is None:
                 result = self.__remotedevice.openConnection()
